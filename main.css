@@ -1,0 +1,172 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat&family=Nunito:wght@900&display=swap');
+body {
+    text-align: center;
+    background-color: rgb(256, 177, 111);
+    background: url('https://cdn.shopify.com/s/files/1/0042/4673/2846/products/OA-139_Light_Wood_Texture_Board_LIGHTWOODTEXTUREBOARD_1024x.jpg?v=1600380808');
+    font-family: 'Montserrat', sans-serif;
+}
+
+h1 {
+    text-align: center;
+    font-family: 'Nunito', sans-serif;
+    color: #49372a;
+}
+
+.buttons-div {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+}
+
+
+/* .buttons-div button {
+    margin: 0 20px;
+    box-shadow: 0px 2px 8px black
+} */
+
+.buttons-div button {
+    margin: 0 20px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.55);
+    background: rgba(255, 228, 196, 0.1);
+}
+
+.close {
+    display: block;
+    align-self: center;
+    width: 100px;
+    margin-top: 20px;
+}
+
+button {
+    font-family: 'Montserrat', sans-serif;
+    width: 150px;
+    border-radius: 16px;
+    box-shadow: 1px 1px grey;
+    height: 40px;
+    /* background-color: bisque; */
+    background: rgba(255, 228, 172, 1);
+    border: 0.5px solid #b89273;
+    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.55);
+    color: #49372a;
+}
+
+.inner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 600px;
+}
+
+
+/* .brainvita {
+    margin: 100px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 275px;
+    background: rgb(163, 50, 6);
+    width: 450px;
+    height: 450px;
+    border: 45px double rgb(210, 80, 20);
+} */
+
+.brainvita {
+    margin: 100px auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-radius: 275px;
+    /* background: radial-gradient(#e66465, rgb(163, 50, 6)); */
+    background: radial-gradient(#E66422, rgb(164, 50, 6), rgb(164, 26, 6));
+    width: 450px;
+    height: 450px;
+    border: 32px double rgb(210, 80, 20);
+    /* box-shadow: 0 15px 18px black; */
+    box-shadow: 0px 10px 14px rgba(0, 0, 0, 0.5);
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+
+/* .square {
+    width: 50px;
+    height: 50px;
+    border: 1px solid black;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: -1px;
+    margin-left: -1px;
+} */
+
+.square {
+    width: 36px;
+    height: 36px;
+    margin: 8px;
+    border: 1px solid rgb(163, 0, 6);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-radius: 30px;
+    /* background: radial-gradient(#e66465, rgb(163, 50, 6)); */
+    background: radial-gradient(#E66417, rgb(164, 43, 6));
+    box-shadow: 0px 2px 40px #E66417;
+}
+
+.dent {
+    border-radius: 30px;
+    box-sizing: border-box;
+    width: 40px;
+    height: 40px;
+    background-color: rgb(163, 50, 6);
+    border: 15px solid darkred;
+}
+
+.marble {
+    cursor: pointer;
+    width: 42px;
+    height: 42px;
+    border-radius: 30px;
+    /* border: 1px solid white; */
+}
+
+.modal {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    background-color: rgb(0, 0, 0, 0.3);
+    z-index: 40;
+    /* display: none; */
+}
+
+.modal-text {
+    margin: 200px auto;
+    width: 50%;
+    height: 450px;
+    max-width: 400px;
+    min-width: 330px;
+    /* 500 * 66% */
+    background-color: white;
+    padding: 20px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: #49372a;
+}
