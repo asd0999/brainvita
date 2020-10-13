@@ -4,9 +4,9 @@
 // https://medium.com/simplejs/detect-the-users-device-type-with-a-simple-javascript-check-4fc656b735e1
 
 let win = false;
-let count = 0;
 let rules = "Welcome to Brainvita!<p>This one-person game is set up by placing thirty-two marbles on the board, leaving the centre dent empty.<p>The aim of the game is to remove every marble except one, and the last marble must end up in the centre dent.<p>To remove a marble, you must move another marble over it and into an empty dent. The marbles can move up, down, left or right, but not diagonally.";
-// let marbleDrop = new Audio('assets/marble1.mp3');
+let continueOption = "Would like to start a new game or continue the old one?"
+    // let marbleDrop = new Audio('assets/marble1.mp3');
 let marbleSound = new Audio('assets/marble2.mp3');
 let setupSound = new Audio('assets/win.mp3');
 // let setupSound = new Audio('assets/setup.wav');
@@ -15,18 +15,21 @@ let loseSound = new Audio('assets/lose.mp3');
 setupSound.volume = 0.4;
 loseSound.volume = 0.5;
 winSound.volume = 1.0;
-let setup = true; //to play sound upon first interaction 
+let setup = false; //to play sound upon first interaction 
 
 let emptyGrid = [];
 let screenSize = {};
 
+let myStorage = window.localStorage;
 
 const $about = $('.about-game');
 $about.on('click', createModal.bind(event, rules));
+
+//play again button click
 const $reset = $('.play-again');
 $reset.on('click', () => {
     win = false;
-    count = 0;
+    myStorage.clear();
     createGrid();
 });
 
@@ -48,9 +51,9 @@ function createGrid() {
             const $square = $('<div>').addClass('square').attr('id', `${i}${j}`).appendTo($row);
             // roundBorder($square, i, j); //extra border-radius for corner divs if using borders on .square
             //add the marbles
-            if (!setup) {
+            if (setup) {
                 if (!(i == 3 && j == 3)) {
-                    const $marble = $('<img>').attr('src', 'assets/marble.png').addClass('marble').hide().attr('id', `${i}${j}`).appendTo($square)
+                    const $marble = $('<img>').attr('src', 'assets/marble.png').addClass('marble').hide().attr('id', `${i}${j}`).appendTo($square);
                     let t = parseInt(`${j}`) * 50;
                     $marble.delay(t).show('fast');
                 }
@@ -76,17 +79,43 @@ function roundBorder($square, i, j) {
     }
 }
 
-function createModal(t) {
+function createModal(t, buttons = "single") {
     $('.modal-parent').empty();
     const $modal = $('<div>').addClass('modal').appendTo('.modal-parent');
     const $modalText = $('<div>').html(t).addClass('modal-text').appendTo($modal);
-    const $close = $('<button>').text('Close').addClass('close').appendTo($modalText).on('click', () => {
-        if (setup) {
-            setTimeout(createGrid, 400);
-        }
-        $modal.css('display', 'none');
-        setup = false;
-    });
+    const $buttonsDiv = $('<div>').addClass('modal-buttons-div').appendTo($modalText);
+    if (buttons == "double") {
+        const $start = $('<button>').text('New Game').addClass('modal-button').appendTo($buttonsDiv).on('click', setUpNewGame.bind(event, $modal));
+        const $continue = $('<button>').text('Continue').addClass('modal-button').appendTo($buttonsDiv).on('click', loadGame.bind(event, $modal));
+    } else {
+        const $close = $('<button>').text('Close').addClass('modal-button').appendTo($buttonsDiv).on('click', setUpNewGame.bind(event, $modal));
+    }
+}
+
+function setUpNewGame($modal) {
+    myStorage.clear();
+    if (!setup) {
+        setTimeout(createGrid, 400);
+    }
+    $modal.css('display', 'none');
+    setup = true;
+}
+
+function loadGame($modal) {
+    $modal.css('display', 'none');
+    setup = true;
+    console.log("loading...");
+    console.log(myStorage.getItem(32 - myStorage.length));
+    let gameState = myStorage.getItem(32 - myStorage.length).split(',');
+    for (let position of gameState) {
+        // console.log(typeof position, position);
+        const $square = $(`#${position}.square`);
+        const $marble = $('<img>').attr('src', 'assets/marble.png').hide().addClass('marble').attr('id', `${position}`).appendTo($square);
+        let t = parseInt(`${$marble.attr('id').split('')[1]}`) * 50;
+        $marble.delay(t).show('fast');
+        createDragDrop();
+    }
+    setTimeout(() => { setupSound.play() }, 300);
 }
 
 function createDragDrop() {
@@ -137,7 +166,15 @@ function createDragDrop() {
             setTimeout(() => {
                 $deleteMarble.remove()
                 marble.attr('id', `${square.attr('id')}`);
-                count++;
+
+                //saving gamestate in localstorage
+                let marblesOnBoard = $('.marble').children().prevObject.length;
+                let gameState = [];
+                for (let i = 0; i < marblesOnBoard; i++) {
+                    let curr_id = $('.marble').children().prevObject[i].id;
+                    gameState.push(curr_id);
+                }
+                myStorage.setItem(`${marblesOnBoard}`, gameState);
                 checkWin();
             }, 300);
         },
@@ -162,31 +199,31 @@ function createDragDrop() {
 }
 
 function checkWin() {
-    // console.log("checking win");
-    // console.log("First, are there any legel moves left?");
+    console.log("checking win");
+    console.log("First, are there any legel moves left?");
 
     if (!legalMovesLeft()) {
         // console.log(legalMovesLeft());
-        let marblesObBoard = $('.marble').children().prevObject.length;
-        // console.log(marblesObBoard);
-        if (marblesObBoard == 1 && ($('#33.square').attr('class').includes('ui-droppable-disabled'))) {
+        let marblesOnBoard = $('.marble').children().prevObject.length;
+        // console.log(marblesOnBoard);
+        if (marblesOnBoard == 1 && ($('#33.square').attr('class').includes('ui-droppable-disabled'))) {
             winSound.play();
             createModal('Amazing! You win!');
         } else {
             loseSound.play();
             createModal('Oops, game over!');
         }
-    } else {
-        // console.log("Moves left to be played, continue playing");
+        // } else {
+        //     console.log("Moves left to be played, continue playing");
     }
 }
 
 function legalMovesLeft() {
     let moveFound = false;
-    let marblesObBoard = $('.marble').children().prevObject.length;
-    // console.log("marblesObBoard: ", marblesObBoard);
+    let marblesOnBoard = $('.marble').children().prevObject.length;
+    // console.log("marblesOnBoard: ", marblesOnBoard);
     let i = 0;
-    while (i < marblesObBoard && moveFound == false) {
+    while (i < marblesOnBoard && moveFound == false) {
         mid0 = parseInt($('.marble').children().prevObject[i].id);
         let midH1 = mid0 + 1; //id for checking horizontal one side
         let midH2 = mid0 - 1; //id for checking horizontal other side
@@ -220,7 +257,7 @@ function legalMovesLeft() {
         }
         i++;
     }
-    if (i >= marblesObBoard && moveFound == false) {
+    if (i >= marblesOnBoard && moveFound == false) {
         return false;
     }
 }
@@ -258,7 +295,7 @@ function isMobileTablet() {
     return check;
 }
 
-function resizeInner() {
+function resizeInnerDiv() {
     $('.brainvita').css({
         'width': `${screenSize.availWidth * 0.8}`,
         'height': `${screenSize.availWidth * 0.8}`
@@ -266,11 +303,16 @@ function resizeInner() {
 }
 
 $(() => {
-    screenSize = window.screen
-    console.log(screenSize);
+    screenSize = window.screen;
+    // console.log(screenSize);
     createGrid();
-
-    window.onresize = resizeInner;
-    setTimeout(() => { createModal(rules) }, 500);
-    resizeInner();
+    window.onresize = resizeInnerDiv;
+    setTimeout(() => {
+        if (myStorage.length == 0) {
+            createModal(rules)
+        } else {
+            createModal(continueOption, 'double');
+        }
+    }, 500);
+    resizeInnerDiv();
 });
