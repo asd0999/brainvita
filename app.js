@@ -48,11 +48,13 @@ function createGrid() {
             const $square = $('<div>').addClass('square').attr('id', `${i}${j}`).appendTo($row);
             // roundBorder($square, i, j); //extra border-radius for corner divs if using borders on .square
             //add the marbles
-            if (!(i == 3 && j == 3) && !setup) {
-                const $marble = $('<img>').attr('src', 'assets/marble.png').addClass('marble').hide().attr('id', `${i}${j}`).appendTo($square)
-                let t = parseInt(`${j}`) * 50;
-                $marble.delay(t).show('fast');
-                setTimeout(() => { setupSound.play() }, 200);
+            if (!setup) {
+                if (!(i == 3 && j == 3)) {
+                    const $marble = $('<img>').attr('src', 'assets/marble.png').addClass('marble').hide().attr('id', `${i}${j}`).appendTo($square)
+                    let t = parseInt(`${j}`) * 50;
+                    $marble.delay(t).show('fast');
+                }
+                setTimeout(() => { setupSound.play() }, 300);
             }
         }
     }
@@ -86,7 +88,6 @@ function createModal(t) {
         setup = false;
     });
 }
-let x;
 
 function createDragDrop() {
     $('.marble').draggable({
@@ -94,7 +95,6 @@ function createDragDrop() {
         revert: 'invalid',
         stack: '.marble',
         drag: function(event, marble) {
-            x = marble;
             if (isMobileTablet()) {
                 $(`#${marble.helper[0].id}.marble`).css({
                     'width': '58px',
@@ -123,12 +123,12 @@ function createDragDrop() {
             square.droppable("disable");
             marble.parent().droppable("enable");
             marble.detach().css({ top: 0, left: 0 }).appendTo(square);
-            let midi = parseInt(marble.attr('id').split('')[0]); //marble id i row
-            let midj = parseInt(marble.attr('id').split('')[1]); //marble id j column
-            let sidi = parseInt($(this).attr('id').split('')[0]); //sqaure id i row
-            let sidj = parseInt($(this).attr('id').split('')[1]); //square id j column
-            let jumpi = (midi + sidi) / 2;
-            let jumpj = (midj + sidj) / 2;
+            let midi = parseInt(marble.attr('id').split('')[0]); //current marble id i row
+            let midj = parseInt(marble.attr('id').split('')[1]); //current marble id j column
+            let sidi = parseInt($(this).attr('id').split('')[0]); //target sqaure id i row
+            let sidj = parseInt($(this).attr('id').split('')[1]); //target square id j column
+            let jumpi = (midi + sidi) / 2; //marble to be deleted if move is legal id i row
+            let jumpj = (midj + sidj) / 2; //marble to be deleted if move is legal id j column            
             const $deleteMarble = $(`#${jumpi}${jumpj}.marble`);
             $deleteMarble.parent().droppable("enable");
             // $deleteMarble.remove();
