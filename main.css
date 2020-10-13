@@ -62,12 +62,6 @@ button {
     padding-top: 50px;
 }
 
-@media (max-width: 550px) {
-    .inner {
-        padding-top: 30px;
-    }
-}
-
 
 /* .brainvita {
     margin: 100px auto;
@@ -186,4 +180,21 @@ button {
     flex-direction: column;
     justify-content: space-between;
     color: #49372a;
+}
+
+@media (max-width: 490px) {
+    .inner {
+        padding-top: 30px;
+    }
+    .brainvita {
+        visibility: hidden;
+    }
+    .row {
+        visibility: visible;
+    }
+    .square {
+        border: none;
+        box-shadow: none;
+        background: radial-gradient(rgba(123, 61, 44, 0.1), rgba(123, 61, 44, 0.6));
+    }
 }
