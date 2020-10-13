@@ -5,7 +5,7 @@
 
 let win = false;
 let rules = "Welcome to Brainvita!<p>This one-person game is set up by placing thirty-two marbles on the board, leaving the centre dent empty.<p>The aim of the game is to remove every marble except one, and the last marble must end up in the centre dent.<p>To remove a marble, you must move another marble over it and into an empty dent. The marbles can move up, down, left or right, but not diagonally.";
-let continueOption = "Would like to start a new game or continue the old one?"
+let continueOption = "You have an unfinished game. Would like to a continue or start a new one?"
     // let marbleDrop = new Audio('assets/marble1.mp3');
 let marbleSound = new Audio('assets/marble2.mp3');
 let setupSound = new Audio('assets/win.mp3');
@@ -85,8 +85,8 @@ function createModal(t, buttons = "single") {
     const $modalText = $('<div>').html(t).addClass('modal-text').appendTo($modal);
     const $buttonsDiv = $('<div>').addClass('modal-buttons-div').appendTo($modalText);
     if (buttons == "double") {
-        const $start = $('<button>').text('New Game').addClass('modal-button').appendTo($buttonsDiv).on('click', setUpNewGame.bind(event, $modal));
         const $continue = $('<button>').text('Continue').addClass('modal-button').appendTo($buttonsDiv).on('click', loadGame.bind(event, $modal));
+        const $start = $('<button>').text('New Game').addClass('modal-button').appendTo($buttonsDiv).on('click', setUpNewGame.bind(event, $modal));
     } else {
         const $close = $('<button>').text('Close').addClass('modal-button').appendTo($buttonsDiv).on('click', setUpNewGame.bind(event, $modal));
     }
@@ -106,8 +106,8 @@ function loadGame($modal) {
     setup = true;
     console.log("loading...");
     console.log(myStorage.getItem(32 - myStorage.length));
-    let gameState = myStorage.getItem(32 - myStorage.length).split(',');
-    for (let position of gameState) {
+    let positions = myStorage.getItem(32 - myStorage.length).split(',');
+    for (let position of positions) {
         // console.log(typeof position, position);
         const $square = $(`#${position}.square`);
         const $marble = $('<img>').attr('src', 'assets/marble.png').hide().addClass('marble').attr('id', `${position}`).appendTo($square);
