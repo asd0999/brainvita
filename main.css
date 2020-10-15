@@ -69,6 +69,10 @@ button:hover {
     background: rgba(255, 228, 196, 0.4);
 }
 
+button:focus {
+    outline: 0;
+}
+
 .modal-button {
     display: block;
     align-self: center;
