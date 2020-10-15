@@ -26,6 +26,7 @@ h1 {
     left: -60px;
     top: -40px;
     width: 100%;
+    cursor: pointer;
 }
 
 .buttons-div,
@@ -372,6 +373,9 @@ button {
     }
     .modal-text {
         margin-top: -40px;
+    }
+    .toggle-switch2.toggle-view {
+        display: none;
     }
 }
 
