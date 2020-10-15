@@ -16,14 +16,20 @@ body {
 h1 {
     text-align: center;
     font-family: 'Nunito', sans-serif;
+}
+
+.title {
     color: #49372a;
+    position: relative;
+    left: -60px;
+    top: -40px;
 }
 
 .buttons-div,
 .modal-buttons-div {
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: center;
     width: 100%;
 }
 
@@ -36,27 +42,29 @@ h1 {
 .buttons-div button {
     margin: 0 20px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.55);
-    background: rgba(255, 228, 196, 0.1);
 }
 
 button {
     font-family: 'Montserrat', sans-serif;
+    background: rgba(255, 228, 196, 0.1);
     width: 150px;
     border-radius: 16px;
-    box-shadow: 1px 1px grey;
+    box-shadow: 1px 1px #49372a;
+    ;
     height: 40px;
     /* background-color: bisque; */
-    background: rgba(255, 228, 172, 1);
     border: 0.5px solid #b89273;
     box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.55);
     color: #49372a;
+    cursor: pointer;
 }
 
 .modal-button {
     display: block;
     align-self: center;
     width: 100px;
-    margin-top: 20px;
+    margin: 20px 10px 0px 10px;
+    background: rgba(255, 228, 172, 1);
 }
 
 .inner {
@@ -79,6 +87,10 @@ button {
     border: 45px double rgb(210, 80, 20);
 } */
 
+.baby-mode {
+    background-color: yellow;
+}
+
 .brainvita {
     /* margin: 100px auto; */
     display: flex;
@@ -100,12 +112,17 @@ button {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
+    position: relative;
+    left: -60px;
+    top: -40px;
 }
 
 .row {
     display: flex;
     flex-direction: row;
     justify-content: center;
+    visibility: visible;
 }
 
 
@@ -134,15 +151,6 @@ button {
     /* background: radial-gradient(#e66465, rgb(163, 50, 6)); */
     background: radial-gradient(#E66417, rgb(164, 43, 6));
     box-shadow: 0px 2px 40px #E66417;
-}
-
-.dent {
-    border-radius: 30px;
-    box-sizing: border-box;
-    width: 40px;
-    height: 40px;
-    background-color: rgb(163, 50, 6);
-    border: 15px solid darkred;
 }
 
 .marble {
@@ -184,6 +192,88 @@ button {
     flex-direction: column;
     justify-content: space-between;
     color: #49372a;
+    position: relative;
+    left: -60px;
+}
+
+.toggle {
+    position: absolute;
+    top: 7%;
+    left: 3%;
+    width: 60px;
+    height: 20px;
+}
+
+.back {
+    position: absolute;
+    top: 3%;
+    left: 3%;
+    width: 60px;
+    height: 28px;
+    /* font-size: 20px;
+    text-decoration: solid;
+    font-weight: bold; */
+    color: #b89273;
+}
+
+.back h1 {
+    position: relative;
+    top: -24px;
+}
+
+.back-active {
+    color: #49372a;
+}
+
+body {
+    padding: 60px;
+}
+
+.toggle-switch input[type=checkbox] {
+    display: none
+}
+
+.toggle-switch label {
+    cursor: pointer;
+}
+
+.toggle-switch label .toggle-track {
+    display: block;
+    height: 28px;
+    width: 60px;
+    background: rgba(255, 228, 196, 0.1);
+    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.55);
+    border: 0.5px solid #b89273;
+    border-radius: 20px;
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.toggle-switch .toggle-track:before {
+    content: '';
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: #b89273;
+    border-radius: 20px;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: left .2s ease-in;
+}
+
+.toggle-switch input[type="checkbox"]:checked+label .toggle-track:before {
+    background: #49372a;
+    left: 34px;
+    /* background: #b89273;
+    left: 2px; */
+}
+
+.easy {
+    position: relative;
+    top: -20px;
+    font-size: 14px;
+    font-family: 'Montserrat', sans-serif
 }
 
 @media (max-width: 490px),
@@ -198,7 +288,7 @@ button {
         visibility: visible;
     }
     .square {
-        border: none;
+        border: 1px solid rgba(163, 0, 6, 0);
         box-shadow: none;
         background: radial-gradient(rgba(123, 61, 44, 0.1), rgba(123, 61, 44, 0.6));
     }

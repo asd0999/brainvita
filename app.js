@@ -2,9 +2,11 @@
 // https://stackoverflow.com/questions/9770935/making-a-chess-game-with-jquery-ui-i-have-used-draggable-but-i-need-to-make-th
 // citation2: identifying device type
 // https://medium.com/simplejs/detect-the-users-device-type-with-a-simple-javascript-check-4fc656b735e1
+// citation3: toggle button
+// https://codepen.io/amhotdogs/pen/aObgaj
 
 let win = false;
-let rules = "Welcome to Brainvita!<p>This one-person game is set up by placing thirty-two marbles on the board, leaving the centre dent empty.<p>The aim of the game is to remove every marble except one, and the last marble must end up in the centre dent.<p>To remove a marble, you must move another marble over it and into an empty dent. The marbles can move up, down, left or right, but not diagonally.";
+let rules = "Welcome to Brainvita!<p>This one-person game's objective is to remove every marble except one, and the last marble must end up in the centre<p>To remove a marble, you must move another marble over it and into an empty hollow. The marbles can not move diagonally<p>Toggle switch (top left) to enter Training Mode which enables back button for reversing moves. To disable Training Mode, toggle switch again and press 'Play Again' or refresh page";
 let continueOption = "You have an unfinished game. Would like to continue or start a new one?"
     // let marbleDrop = new Audio('assets/marble1.mp3');
 let marbleSound = new Audio('assets/marble2.mp3');
@@ -12,15 +14,25 @@ let setupSound = new Audio('assets/win.mp3');
 // let setupSound = new Audio('assets/setup.wav');
 let winSound = new Audio('assets/winwin.mp3');
 let loseSound = new Audio('assets/lose.mp3');
+let clickSound = new Audio('assets/click.mp3');
+let popSound = new Audio('assets/pop.mp3');
 setupSound.volume = 0.4;
 loseSound.volume = 0.5;
 winSound.volume = 1.0;
 let setup = false; //to play sound upon first interaction 
+let toggleCount = 0;
+let trainingMode = false;
 
 let emptyGrid = [];
 let screenSize = {};
 
 let myStorage = window.localStorage;
+
+const $back = $('.back');
+$back.on('click', goOneStepBack);
+
+const $toggle = $('.toggle-track')
+$toggle.on('click', toggleTrainingMode);
 
 const $about = $('.about-game');
 $about.on('click', createModal.bind(event, rules));
@@ -31,6 +43,24 @@ $reset.on('click', () => {
     win = false;
     myStorage.clear();
     createGrid();
+    if (screenSize.availWidth <= 490 || screenSize.availHeight <= 680 || $('.back').attr('class').includes('back-active')) {
+        $('.brainvita').css({ 'visibility': 'hidden' });
+        $('.square').css({
+            'border': '1px solid rgba(163, 0, 6,0)',
+            'box-shadow': 'none',
+            'background': 'radial-gradient(rgba(123, 61, 44, 0.1), rgba(123, 61, 44, 0.6))'
+        });
+        if ($('.back').attr('class').includes('back-active')) {
+            trainingMode = true;
+        }
+    } else {
+        $('.brainvita').css({ 'visibility': 'visible' });
+        $('.square').css({
+            'border': '1px solid rgb(163, 0, 6)',
+            'box-shadow': '0px 2px 40px #E66417',
+            'background': 'radial-gradient(#E66417, rgb(164, 43, 6))'
+        });
+    }
 });
 
 function createGrid() {
@@ -60,6 +90,11 @@ function createGrid() {
                 setTimeout(() => { setupSound.play() }, 300);
             }
         }
+    }
+    if (myStorage.getItem(32) != 'training')
+        myStorage.setItem('32', 'normal');
+    if ($('.back').attr('class').includes('back-active')) {
+        myStorage.setItem('32', 'training');
     }
     createDragDrop();
 }
@@ -101,14 +136,72 @@ function setUpNewGame($modal) {
     setup = true;
 }
 
+function goOneStepBack() {
+    if (myStorage.length > 2 && trainingMode && $('.back').attr('class').includes('back-active')) {
+        popSound.play();
+        if (toggleCount % 2 == 1) {
+            //only create grid and not populate marbles
+            setup = false;
+            createGrid();
+            setup = true;
+
+            $('.brainvita').css({ 'visibility': 'hidden' });
+            $('.square').css({
+                'visibility': 'visible',
+                'border': '1px solid rgba(163, 0, 6, 0)',
+                'box-shadow': 'none',
+                'background': 'radial-gradient(rgba(123, 61, 44, 0.1), rgba(123, 61, 44, 0.6))'
+            });
+
+            //populate marbles, same code as loadGame()
+            //writing again to avaoid sending a modal dic and the sound
+            console.log("length: ", myStorage.length);
+            myStorage.removeItem(33 - myStorage.length);
+            $('.marble').remove();
+            console.log(myStorage.getItem(33 - myStorage.length));
+            let positions = myStorage.getItem(33 - myStorage.length).split(',');
+            console.log(positions);
+            for (let position of positions) {
+                const $square = $(`#${position}.square`);
+                const $marble = $('<img>').attr('src', 'assets/marble.png').addClass('marble').attr('id', `${position}`).appendTo($square);
+                createDragDrop();
+            }
+        }
+    } else if (myStorage.length == 2 && trainingMode && $('.back').attr('class').includes('back-active')) {
+        popSound.play();
+        myStorage.removeItem(31);
+        createGrid();
+
+        $('.brainvita').css({ 'visibility': 'hidden' });
+        $('.square').css({
+            'visibility': 'visible',
+            'border': '1px solid rgba(163, 0, 6, 0)',
+            'box-shadow': 'none',
+            'background': 'radial-gradient(rgba(123, 61, 44, 0.1), rgba(123, 61, 44, 0.6))'
+        });
+    } else {}
+}
+
 function loadGame($modal) {
+    console.log(myStorage);
+    // $('.square').removeClass('ui-droppable-disabled');
+    if (myStorage.getItem(32) == "training") {
+        trainingMode = true;
+        $('.brainvita').css({ 'visibility': 'hidden' });
+        $('.square').css({
+            'visibility': 'visible',
+            'border': '1px solid rgba(163, 0, 6, 0)',
+            'box-shadow': 'none',
+            'background': 'radial-gradient(rgba(123, 61, 44, 0.1), rgba(123, 61, 44, 0.6))'
+        });
+    }
     $modal.css('display', 'none');
     setup = true;
-    console.log("loading...");
-    console.log(myStorage.getItem(32 - myStorage.length));
-    let positions = myStorage.getItem(32 - myStorage.length).split(',');
+    // console.log("loading...");
+    // console.log(myStorage.getItem(33 - myStorage.length)); 
+    let positions = myStorage.getItem(33 - myStorage.length).split(','); //33 bc the first item 32 is the mode info
+    console.log(positions);
     for (let position of positions) {
-        // console.log(typeof position, position);
         const $square = $(`#${position}.square`);
         const $marble = $('<img>').attr('src', 'assets/marble.png').hide().addClass('marble').attr('id', `${position}`).appendTo($square);
         let t = parseInt(`${$marble.attr('id').split('')[1]}`) * 50;
@@ -124,7 +217,7 @@ function createDragDrop() {
         revert: 'invalid',
         stack: '.marble',
         drag: function(event, marble) {
-            if (isMobileTablet()) {
+            if (isMobileTablet()) { //if touch device, increase size more
                 $(`#${marble.helper[0].id}.marble`).css({
                     'width': '58px',
                     'height': '58px'
@@ -137,7 +230,7 @@ function createDragDrop() {
             }
         },
         stop: function(event, marble) {
-            $('.marble').css({
+            $('.marble').css({ //reset size when drag stops
                 'width': '42px',
                 'height': '42px'
             });
@@ -199,8 +292,8 @@ function createDragDrop() {
 }
 
 function checkWin() {
-    console.log("checking win");
-    console.log("First, are there any legel moves left?");
+    // console.log("checking win");
+    // console.log("First, are there any legel moves left?");
 
     if (!legalMovesLeft()) {
         // console.log(legalMovesLeft());
@@ -208,9 +301,15 @@ function checkWin() {
         // console.log(marblesOnBoard);
         if (marblesOnBoard == 1 && ($('#33.square').attr('class').includes('ui-droppable-disabled'))) {
             winSound.play();
-            createModal('Amazing! You win!');
+            myStorage.clear();
+            if (!trainingMode) {
+                createModal('Amazing! You win!');
+            } else if (trainingMode) {
+                createModal('Good job! Now try without Training Mode!');
+            }
         } else {
             loseSound.play();
+            myStorage.clear();
             createModal('Oops, game over!');
         }
         // } else {
@@ -302,13 +401,38 @@ function resizeInnerDiv() {
     });
 }
 
+function toggleTrainingMode() {
+    trainingMode = true;
+    myStorage.setItem('32', 'training');
+    clickSound.play();
+    $('.back').toggleClass('back-active');
+    $('.back h1').toggleClass('back-active');
+    if (trainingMode && $('.back').attr('class').includes('back-active')) {
+        $('.brainvita').css({ 'visibility': 'hidden' });
+        $('.row').css({ 'visibility': 'visible' });
+        $('.square').css({
+            'border': '1px solid rgba(163, 0, 6,0)',
+            'box-shadow': 'none',
+            'background': 'radial-gradient(rgba(123, 61, 44, 0.1), rgba(123, 61, 44, 0.6))'
+        });
+    } else {
+        $('.brainvita').css({ 'visibility': 'visible' });
+        $('.square').css({
+            'border': '1px solid rgb(163, 0, 6)',
+            'box-shadow': '0px 2px 40px #E66417',
+            'background': 'radial-gradient(#E66417, rgb(164, 43, 6))'
+        });
+    }
+    toggleCount++;
+}
+
 $(() => {
     screenSize = window.screen;
     // console.log(screenSize);
     createGrid();
     window.onresize = resizeInnerDiv;
     setTimeout(() => {
-        if (myStorage.length == 0) {
+        if (myStorage.length <= 1 || myStorage.getItem(32) == 'training') {
             createModal(rules)
         } else {
             createModal(continueOption, 'double');
