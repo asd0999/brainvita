@@ -4,6 +4,7 @@ body {
     background-color: rgb(256, 177, 111);
     background: url('https://cdn.shopify.com/s/files/1/0042/4673/2846/products/OA-139_Light_Wood_Texture_Board_LIGHTWOODTEXTUREBOARD_1024x.jpg?v=1600380808');
     font-family: 'Montserrat', sans-serif;
+    background-size: cover;
     position: fixed;
     margin: 0;
     width: 100%;
@@ -11,6 +12,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    padding: 60px;
 }
 
 h1 {
@@ -23,6 +25,7 @@ h1 {
     position: relative;
     left: -60px;
     top: -40px;
+    width: 100%;
 }
 
 .buttons-div,
@@ -32,12 +35,6 @@ h1 {
     justify-content: center;
     width: 100%;
 }
-
-
-/* .buttons-div button {
-    margin: 0 20px;
-    box-shadow: 0px 2px 8px black
-} */
 
 .buttons-div button {
     margin: 0 20px;
@@ -106,6 +103,11 @@ button {
     border: 32px double rgb(210, 80, 20);
     /* box-shadow: 0 15px 18px black; */
     box-shadow: 0px 10px 14px rgba(0, 0, 0, 0.5);
+    visibility: visible;
+}
+
+.nude-brainvita {
+    visibility: hidden;
 }
 
 .container {
@@ -153,6 +155,13 @@ button {
     box-shadow: 0px 2px 40px #E66417;
 }
 
+.nude-square {
+    visibility: visible;
+    border: 1px solid rgba(163, 0, 6, 0);
+    box-shadow: none;
+    background: radial-gradient(rgba(123, 61, 44, 0.1), rgba(123, 61, 44, 0.6));
+}
+
 .marble {
     cursor: pointer;
     width: 42px;
@@ -184,7 +193,6 @@ button {
     /* height: 450px; */
     max-width: 400px;
     min-width: 330px;
-    /* 500 * 66% */
     background-color: white;
     padding: 20px;
     box-sizing: border-box;
@@ -194,14 +202,6 @@ button {
     color: #49372a;
     position: relative;
     left: -60px;
-}
-
-.toggle {
-    position: absolute;
-    top: 7%;
-    left: 3%;
-    width: 60px;
-    height: 20px;
 }
 
 .back {
@@ -216,6 +216,45 @@ button {
     color: #b89273;
 }
 
+.training-mode {
+    position: absolute;
+    top: 7%;
+    left: 3%;
+    width: 60px;
+    height: 20px;
+}
+
+.training-banner {
+    position: absolute;
+    top: 25px;
+    right: 120px;
+    width: 18%;
+    height: 10%;
+    background: #49372a;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 40px 0 0 40px;
+    font-size: 16px;
+    color: bisque;
+    font-family: 'Monteserrat', sans-serif;
+    visibility: hidden;
+}
+
+.banner-show {
+    visibility: visible;
+}
+
+.toggle-view {
+    position: absolute;
+    top: 11%;
+    left: 3%;
+    width: 60px;
+    height: 20px;
+    z-index: 4;
+}
+
 .back h1 {
     position: relative;
     top: -24px;
@@ -225,9 +264,8 @@ button {
     color: #49372a;
 }
 
-body {
-    padding: 60px;
-}
+
+/*training mode*/
 
 .toggle-switch input[type=checkbox] {
     display: none
@@ -254,7 +292,9 @@ body {
     display: inline-block;
     height: 24px;
     width: 24px;
-    background: #b89273;
+    /* background: #b89273; */
+    background: rgba(123, 61, 44, 0.1);
+    box-shadow: 1px 2px rgba(123, 61, 44, 0.5);
     border-radius: 20px;
     position: absolute;
     top: 2px;
@@ -269,11 +309,49 @@ body {
     left: 2px; */
 }
 
-.easy {
+
+/*toggle view*/
+
+.toggle-switch2 input[type=checkbox] {
+    display: none
+}
+
+.toggle-switch2 label {
+    cursor: pointer;
+}
+
+.toggle-switch2 label .toggle-track2 {
+    display: block;
+    height: 28px;
+    width: 60px;
+    background: rgba(255, 228, 196, 0.1);
+    box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.55);
+    border: 0.5px solid #b89273;
+    border-radius: 20px;
     position: relative;
-    top: -20px;
-    font-size: 14px;
-    font-family: 'Montserrat', sans-serif
+    margin-bottom: 15px;
+}
+
+.toggle-switch2 .toggle-track2:before {
+    content: '';
+    display: inline-block;
+    height: 24px;
+    width: 24px;
+    background: rgb(164, 43, 6);
+    /* box-shadow: 1px 2px rgba(100, 23, 2, 0.5); */
+    border-radius: 20px;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    transition: left .2s ease-in;
+}
+
+.toggle-switch2 input[type="checkbox"]:checked+label .toggle-track2:before {
+    /* background: #b89273; */
+    background: rgba(123, 61, 44, 0.1);
+    box-shadow: 1px 2px rgba(123, 61, 44, 0.5);
+    box-sizing: border-box;
+    left: 33px;
 }
 
 @media (max-width: 490px),
@@ -291,5 +369,21 @@ body {
         border: 1px solid rgba(163, 0, 6, 0);
         box-shadow: none;
         background: radial-gradient(rgba(123, 61, 44, 0.1), rgba(123, 61, 44, 0.6));
+    }
+    .modal-text {
+        margin-top: -40px;
+    }
+}
+
+@media (max-width: 490px) {
+    .buttons-div {
+        position: relative;
+        top: 40px;
+    }
+}
+
+@media (max-height: 630px) {
+    .inner {
+        margin-top: -40px;
     }
 }

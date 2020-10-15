@@ -6,7 +6,7 @@
 // https://codepen.io/amhotdogs/pen/aObgaj
 
 let win = false;
-let rules = "Welcome to Brainvita!<p>This one-person game's objective is to remove every marble except one, and the last marble must end up in the centre<p>To remove a marble, you must move another marble over it and into an empty hollow. The marbles can not move diagonally<p>Toggle switch (top left) to enter Training Mode which enables back button for reversing moves. To disable Training Mode, toggle switch again and press 'Play Again' or refresh page";
+let rules = "Welcome to Brainvita!<p>This one-person game's objective is to remove every marble except one, and the last marble must end up in the centre<p>To remove a marble, you must move another marble over it and into an empty hollow. The marbles can not move diagonally<p>Toggle switches to enable/disable Training Mode (rewind moves) and change game view.";
 let continueOption = "You have an unfinished game. Would like to continue or start a new one?"
     // let marbleDrop = new Audio('assets/marble1.mp3');
 let marbleSound = new Audio('assets/marble2.mp3');
@@ -22,46 +22,56 @@ winSound.volume = 1.0;
 let setup = false; //to play sound upon first interaction 
 let toggleCount = 0;
 let trainingMode = false;
+let nudeSkin = false;
 
 let emptyGrid = [];
 let screenSize = {};
 
 let myStorage = window.localStorage;
 
+//back button
 const $back = $('.back');
 $back.on('click', goOneStepBack);
 
+//training mode toggle
 const $toggle = $('.toggle-track')
 $toggle.on('click', toggleTrainingMode);
 
+//view toggle
+const $viewToggle = $('.toggle-track2');
+$viewToggle.on('click', changeView);
+
+//about game button
 const $about = $('.about-game');
 $about.on('click', createModal.bind(event, rules));
 
-//play again button click
+//play again button
 const $reset = $('.play-again');
 $reset.on('click', () => {
     win = false;
     myStorage.clear();
     createGrid();
-    if (screenSize.availWidth <= 490 || screenSize.availHeight <= 680 || $('.back').attr('class').includes('back-active')) {
-        $('.brainvita').css({ 'visibility': 'hidden' });
-        $('.square').css({
-            'border': '1px solid rgba(163, 0, 6,0)',
-            'box-shadow': 'none',
-            'background': 'radial-gradient(rgba(123, 61, 44, 0.1), rgba(123, 61, 44, 0.6))'
-        });
-        if ($('.back').attr('class').includes('back-active')) {
-            trainingMode = true;
-        }
+    if ($('.back').attr('class').includes('back-active')) {
+        trainingMode = true;
     } else {
-        $('.brainvita').css({ 'visibility': 'visible' });
-        $('.square').css({
-            'border': '1px solid rgb(163, 0, 6)',
-            'box-shadow': '0px 2px 40px #E66417',
-            'background': 'radial-gradient(#E66417, rgb(164, 43, 6))'
-        });
+        $('.training-banner').removeClass('banner-show');
+    }
+    if (nudeSkin) {
+        $('.brainvita').addClass('nude-brainvita');
+        $('.square').addClass('nude-square');
+    } else {
+        $('.brainvita').removeClass('nude-brainvita');
+        $('.square').removeClass('nude-square');
     }
 });
+
+function changeView() {
+    clickSound.play();
+    $('.brainvita').toggleClass('nude-brainvita');
+    $('.square').toggleClass('nude-square');
+    nudeSkin = !nudeSkin;
+
+}
 
 function createGrid() {
     $('.brainvita').empty();
@@ -145,13 +155,13 @@ function goOneStepBack() {
             createGrid();
             setup = true;
 
-            $('.brainvita').css({ 'visibility': 'hidden' });
-            $('.square').css({
-                'visibility': 'visible',
-                'border': '1px solid rgba(163, 0, 6, 0)',
-                'box-shadow': 'none',
-                'background': 'radial-gradient(rgba(123, 61, 44, 0.1), rgba(123, 61, 44, 0.6))'
-            });
+            if (nudeSkin) {
+                $('.brainvita').addClass('nude-brainvita');
+                $('.square').addClass('nude-square');
+            } else {
+                $('.brainvita').removeClass('nude-brainvita');
+                $('.square').removeClass('nude-square');
+            }
 
             //populate marbles, same code as loadGame()
             //writing again to avaoid sending a modal dic and the sound
@@ -172,13 +182,13 @@ function goOneStepBack() {
         myStorage.removeItem(31);
         createGrid();
 
-        $('.brainvita').css({ 'visibility': 'hidden' });
-        $('.square').css({
-            'visibility': 'visible',
-            'border': '1px solid rgba(163, 0, 6, 0)',
-            'box-shadow': 'none',
-            'background': 'radial-gradient(rgba(123, 61, 44, 0.1), rgba(123, 61, 44, 0.6))'
-        });
+        if (nudeSkin) {
+            $('.brainvita').addClass('nude-brainvita');
+            $('.square').addClass('nude-square');
+        } else {
+            $('.brainvita').removeClass('nude-brainvita');
+            $('.square').removeClass('nude-square');
+        }
     } else {}
 }
 
@@ -187,13 +197,8 @@ function loadGame($modal) {
     // $('.square').removeClass('ui-droppable-disabled');
     if (myStorage.getItem(32) == "training") {
         trainingMode = true;
-        $('.brainvita').css({ 'visibility': 'hidden' });
-        $('.square').css({
-            'visibility': 'visible',
-            'border': '1px solid rgba(163, 0, 6, 0)',
-            'box-shadow': 'none',
-            'background': 'radial-gradient(rgba(123, 61, 44, 0.1), rgba(123, 61, 44, 0.6))'
-        });
+        // $('.brainvita').addClass('nude-brainvita');
+        // $('.square').addClass('nude-square');
     }
     $modal.css('display', 'none');
     setup = true;
@@ -407,23 +412,8 @@ function toggleTrainingMode() {
     clickSound.play();
     $('.back').toggleClass('back-active');
     $('.back h1').toggleClass('back-active');
-    if (trainingMode && $('.back').attr('class').includes('back-active')) {
-        $('.brainvita').css({ 'visibility': 'hidden' });
-        $('.row').css({ 'visibility': 'visible' });
-        $('.square').css({
-            'border': '1px solid rgba(163, 0, 6,0)',
-            'box-shadow': 'none',
-            'background': 'radial-gradient(rgba(123, 61, 44, 0.1), rgba(123, 61, 44, 0.6))'
-        });
-    } else {
-        $('.brainvita').css({ 'visibility': 'visible' });
-        $('.square').css({
-            'border': '1px solid rgb(163, 0, 6)',
-            'box-shadow': '0px 2px 40px #E66417',
-            'background': 'radial-gradient(#E66417, rgb(164, 43, 6))'
-        });
-    }
     toggleCount++;
+    $('.training-banner').addClass('banner-show');
 }
 
 $(() => {

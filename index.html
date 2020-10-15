@@ -15,13 +15,23 @@
 
 <body>
     <h1 class="title">BRAINVITA</h1>
-    <button class="back"><h1>&lt;&lt;</h1></button>
-    <!-- <button class="toggle">Fwd</button> -->
-    <div class="toggle-switch toggle">
+    <button class="back" title="Rewind moves in Training Mode"><h1>&lt;</h1></button>
+    <div class="toggle-switch training-mode" title="Enable/disable Training Mode. Note: Game state will not be saved in Training Mode">
         <input type="checkbox" id="chkTest" name="chkTest">
         <label for="chkTest">
           <span class="toggle-track"></span>
         </label>
+    </div>
+    <div class="toggle-switch2 toggle-view" title="Change game view">
+        <input type="checkbox" id="chkTest2" name="chkTest2">
+        <label for="chkTest2">
+          <span class="toggle-track2"></span>
+        </label>
+    </div>
+    <div class="training-banner">
+        <p>
+            Training Mode
+        </p>
     </div>
     <div class="container">
         <div class="buttons-div">
