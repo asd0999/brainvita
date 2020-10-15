@@ -57,6 +57,18 @@ button {
     cursor: pointer;
 }
 
+button:hover {
+    background: #fcdba2;
+}
+
+.buttons-div button:hover {
+    background: rgba(255, 228, 196, 0.4);
+}
+
+.back:hover {
+    background: rgba(255, 228, 196, 0.4);
+}
+
 .modal-button {
     display: block;
     align-self: center;
