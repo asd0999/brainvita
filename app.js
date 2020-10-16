@@ -73,7 +73,19 @@ function changeView() {
     $('.brainvita').toggleClass('nude-brainvita');
     $('.square').toggleClass('nude-square');
     nudeSkin = !nudeSkin;
+    if (nudeSkin) {
+        changeFavicon('1');
+    } else {
+        changeFavicon('2');
+    }
+}
 
+function changeFavicon(i) {
+    var link = document.querySelector("link[rel*='icon']") || document.createElement('link');
+    link.type = 'image/x-icon';
+    link.rel = 'shortcut icon';
+    link.href = `assets/brainvita${i}.png`;
+    document.getElementsByTagName('head')[0].appendChild(link);
 }
 
 function createGrid() {
