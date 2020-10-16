@@ -4,6 +4,8 @@
 // https://medium.com/simplejs/detect-the-users-device-type-with-a-simple-javascript-check-4fc656b735e1
 // citation3: toggle button
 // https://codepen.io/amhotdogs/pen/aObgaj
+// citation4: favicon change
+// https://stackoverflow.com/questions/260857/changing-website-favicon-dynamically
 
 let win = false;
 let rules = "Welcome to Brainvita!<p>The objective of this one-person game is to remove all but one marble fom the board and the last marble must end up in the centre<p>To remove a marble, you must move another marble over it and into an empty hollow. The marbles can not move diagonally or skip over multiple marbles<p>The switch(es) can be used to toggle Easy Mode (rewind moves) and change the game view (not available on smaller screens)";
