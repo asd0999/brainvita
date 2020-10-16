@@ -6,7 +6,7 @@
 // https://codepen.io/amhotdogs/pen/aObgaj
 
 let win = false;
-let rules = "Welcome to Brainvita!<p>The objective of this one-person game is to remove all but one marble fom the board and the last marble must end up in the centre hollow<p>To remove a marble, you must move another marble over it and into an empty hollow. The marbles can not move diagonally or skip over multiple marbles<p>The toggle switches enable/disable Training Mode (rewind moves) and change the game view (depending on screen space)";
+let rules = "Welcome to Brainvita!<p>The objective of this one-person game is to remove all but one marble fom the board and the last marble must end up in the centre<p>To remove a marble, you must move another marble over it and into an empty hollow. The marbles can not move diagonally or skip over multiple marbles<p>The switch(es) can be used to toggle Easy Mode (rewind moves) and change the game view (not available on smaller screens)";
 let continueOption = "You have an unfinished game. Would like to continue or start a new one?"
     // let marbleDrop = new Audio('assets/marble1.mp3');
 let marbleSound = new Audio('assets/marble2.mp3');
