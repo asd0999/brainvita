@@ -26,7 +26,7 @@ h1 {
     left: -60px;
     top: -40px;
     width: 100%;
-    cursor: pointer;
+    /* cursor: pointer; */
 }
 
 .buttons-div,
@@ -256,25 +256,15 @@ button:focus {
     font-size: 16px;
     color: bisque;
     font-family: 'Monteserrat', sans-serif;
-    visibility: hidden;
     transform: translateX(120px);
-    transition-property: transform;
-    transition-duration: 1s;
-    transition-timing-function: ease-in;
+    /* transition-property: transform;
+    transition-duration: 0.1s;
+    transition-timing-function: ease-in; */
 }
 
 .banner-show {
-    visibility: visible;
-    /* animation: slide 1s ease-in-out; */
     transform: translateX(-100px)
 }
-
-
-/* @keyframes slide {
-    0% {
-        transform: translateX(100px);
-    }
-} */
 
 .toggle-view {
     position: absolute;

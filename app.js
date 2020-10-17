@@ -8,7 +8,7 @@
 // https://stackoverflow.com/questions/260857/changing-website-favicon-dynamically
 
 let win = false;
-let rules = "Welcome to Brainvita!<p>The objective of this one-person game is to remove all but one marble fom the board and the last marble must end up in the centre<p>To remove a marble, you must move another marble over it and into an empty hollow. The marbles can not move diagonally or skip over multiple marbles<p>The switch(es) can be used to toggle Easy Mode (rewind moves) and change the game view (not available on smaller screens)";
+let rules = "Welcome to Brainvita!<p>The objective of this one-person game is to remove all but one marble fom the board and the last marble must end up in the centre<p>To remove a marble, you must move another marble over it and into an empty hollow. The marbles can not move diagonally or skip over multiple marbles<p>Use switches to disable rewinding of moves (harder dificulty level) and change the game view (not available on smaller screens)";
 let continueOption = "You have an unfinished game. Would like to continue or start a new one?"
     // let marbleDrop = new Audio('assets/marble1.mp3');
 let marbleSound = new Audio('assets/marble2.mp3');
@@ -25,15 +25,15 @@ let setup = false; //to play sound upon first interaction
 let toggleCount = 0;
 let trainingMode = false;
 let nudeSkin = false;
-
+let backingUp = false;
 let emptyGrid = [];
 let screenSize = {};
 
 let myStorage = window.localStorage;
 
-$('.title').on('click', () => {
-    location.reload();
-});
+// $('.title').on('click', () => {
+//     location.reload();
+// });
 //back button
 const $back = $('.back');
 $back.on('click', goOneStepBack);
@@ -52,15 +52,19 @@ $about.on('click', createModal.bind(event, rules));
 
 //play again button
 const $reset = $('.play-again');
-$reset.on('click', () => {
+$reset.on('click', playAgain);
+
+function playAgain() {
+    console.log("playAgain");
     win = false;
+    let temp1 = myStorage.getItem(32);
+    let temp2 = myStorage.getItem(33);
     myStorage.clear();
+    setTimeout(() => {
+        myStorage.setItem('32', `${temp1}`);
+        myStorage.setItem('33', `${temp2}`);
+    }, 400)
     createGrid();
-    if ($('.back').attr('class').includes('back-active')) {
-        trainingMode = true;
-    } else {
-        $('.training-banner').removeClass('banner-show');
-    }
     if (nudeSkin) {
         $('.brainvita').addClass('nude-brainvita');
         $('.square').addClass('nude-square');
@@ -68,17 +72,22 @@ $reset.on('click', () => {
         $('.brainvita').removeClass('nude-brainvita');
         $('.square').removeClass('nude-square');
     }
-});
+}
 
 function changeView() {
+    console.log("changeView");
     clickSound.play();
-    $('.brainvita').toggleClass('nude-brainvita');
-    $('.square').toggleClass('nude-square');
     nudeSkin = !nudeSkin;
     if (nudeSkin) {
         changeFavicon('1');
+        $('.brainvita').addClass('nude-brainvita');
+        $('.square').addClass('nude-square');
+        myStorage.setItem('33', 'nude');
     } else {
         changeFavicon('2');
+        $('.brainvita').removeClass('nude-brainvita');
+        $('.square').removeClass('nude-square');
+        myStorage.setItem('33', 'red');
     }
 }
 
@@ -91,7 +100,21 @@ function changeFavicon(i) {
 }
 
 function createGrid() {
+    console.log("createGrid");
     $('.brainvita').empty();
+    if (!setup) {
+        console.log("when setup false");
+        if (myStorage.getItem(32) != 'training') {
+            myStorage.setItem('32', 'normal');
+        } else {
+            myStorage.setItem('32', 'training');
+        }
+        if (myStorage.getItem(33) != 'nude') {
+            myStorage.setItem('33', 'red');
+        }
+        console.log(myStorage.getItem(33));
+        console.log(myStorage.getItem(32));
+    }
     for (let i = 0; i < 7; i++) {
         const $row = $('<div>').addClass('row').appendTo('.brainvita');
         for (let j = 0; j < 7; j++) {
@@ -106,7 +129,7 @@ function createGrid() {
             }
             //create the grid of square divs
             const $square = $('<div>').addClass('square').attr('id', `${i}${j}`).appendTo($row);
-            // roundBorder($square, i, j); //extra border-radius for corner divs if using borders on .square
+
             //add the marbles
             if (setup) {
                 if (!(i == 3 && j == 3)) {
@@ -118,35 +141,27 @@ function createGrid() {
             }
         }
     }
-    if (myStorage.getItem(32) != 'training')
-        myStorage.setItem('32', 'normal');
-    if ($('.back').attr('class').includes('back-active')) {
-        myStorage.setItem('32', 'training');
+    if (myStorage.getItem(33) == 'nude' && myStorage.length >= 2 && !backingUp) {
+        console.log("trigger view change");
+        $('.toggle-track2').trigger('click');
     }
+
+    if (myStorage.getItem(32) == 'training' && myStorage.length >= 2 && !backingUp) {
+        console.log("trigger mode change");
+        $('.toggle-track').trigger('click');
+    }
+
     createDragDrop();
 }
 
-function roundBorder($square, i, j) {
-    if ((i == 0 && j == 2) || (i == 2 && j == 0)) {
-        $square.css('border-top-left-radius', '20px');
-    }
-    if ((i == 4 && j == 0) || (i == 6 && j == 2)) {
-        $square.css('border-bottom-left-radius', '20px');
-    }
-    if ((i == 0 && j == 4) || (i == 2 && j == 6)) {
-        $square.css('border-top-right-radius', '20px');
-    }
-    if ((i == 4 && j == 6) || (i == 6 && j == 4)) {
-        $square.css('border-bottom-right-radius', '20px');
-    }
-}
-
 function createModal(t, buttons = "single") {
+    console.log("createModal");
     $('.modal-parent').empty();
     const $modal = $('<div>').addClass('modal').appendTo('.modal-parent');
     const $modalText = $('<div>').html(t).addClass('modal-text').appendTo($modal);
     const $buttonsDiv = $('<div>').addClass('modal-buttons-div').appendTo($modalText);
     if (buttons == "double") {
+        // when length of myStrorage more than 2
         const $continue = $('<button>').text('Continue').addClass('modal-button').appendTo($buttonsDiv).on('click', loadGame.bind(event, $modal));
         const $start = $('<button>').text('New Game').addClass('modal-button').appendTo($buttonsDiv).on('click', setUpNewGame.bind(event, $modal));
     } else {
@@ -155,46 +170,62 @@ function createModal(t, buttons = "single") {
 }
 
 function setUpNewGame($modal) {
+    console.log("setUpNewGame");
+    let temp1 = myStorage.getItem(32);
+    let temp2 = myStorage.getItem(33);
     myStorage.clear();
+    myStorage.setItem('32', `${temp1}`); //this value will be flipped, only here to avoid null
+    myStorage.setItem('33', `${temp2}`); //something weird happening with the setTimeout
+    console.log(setup);
     if (!setup) {
         setTimeout(createGrid, 400);
     }
     $modal.css('display', 'none');
     setup = true;
+
+    if (trainingMode) {
+        $('.toggle-track').trigger('click')
+    }
 }
 
 function goOneStepBack() {
-    if (myStorage.length > 2 && trainingMode && $('.back').attr('class').includes('back-active')) {
+    console.log("goOneStepBack");
+    backingUp = true
+    if (myStorage.length > 3 && !trainingMode && $('.back').attr('class').includes('back-active')) {
+        console.log("first conditional");
         popSound.play();
-        if (toggleCount % 2 == 1) {
-            //only create grid and not populate marbles
-            setup = false;
-            createGrid();
-            setup = true;
+        // if (toggleCount % 2 == 1) {
+        //only create grid and not populate marbles
+        setup = false;
+        createGrid();
+        setup = true;
 
-            if (nudeSkin) {
-                $('.brainvita').addClass('nude-brainvita');
-                $('.square').addClass('nude-square');
-            } else {
-                $('.brainvita').removeClass('nude-brainvita');
-                $('.square').removeClass('nude-square');
-            }
-
-            //populate marbles, same code as loadGame()
-            //writing again to avaoid sending a modal dic and the sound
-            console.log("length: ", myStorage.length);
-            myStorage.removeItem(33 - myStorage.length);
-            $('.marble').remove();
-            console.log(myStorage.getItem(33 - myStorage.length));
-            let positions = myStorage.getItem(33 - myStorage.length).split(',');
-            console.log(positions);
-            for (let position of positions) {
-                const $square = $(`#${position}.square`);
-                const $marble = $('<img>').attr('src', 'assets/marble.png').addClass('marble').attr('id', `${position}`).appendTo($square);
-                createDragDrop();
-            }
+        if (nudeSkin) {
+            $('.brainvita').addClass('nude-brainvita');
+            $('.square').addClass('nude-square');
+        } else {
+            $('.brainvita').removeClass('nude-brainvita');
+            $('.square').removeClass('nude-square');
         }
-    } else if (myStorage.length == 2 && trainingMode && $('.back').attr('class').includes('back-active')) {
+
+        //populate marbles, same code as loadGame()
+        //writing again to avaoid sending a modal dic and the sound
+        console.log("length: ", myStorage.length);
+        myStorage.removeItem(34 - myStorage.length);
+        $('.marble').remove();
+        console.log(myStorage.getItem(34 - myStorage.length));
+        let positions = myStorage.getItem(34 - myStorage.length).split(',');
+        // console.log(positions);
+        for (let position of positions) {
+            const $square = $(`#${position}.square`);
+            const $marble = $('<img>').attr('src', 'assets/marble.png').addClass('marble').attr('id', `${position}`).appendTo($square);
+            createDragDrop();
+        }
+        // }
+        backingUp = false;
+
+    } else if (myStorage.length == 3 && !trainingMode && $('.back').attr('class').includes('back-active')) {
+        console.log("second conditional");
         popSound.play();
         myStorage.removeItem(31);
         createGrid();
@@ -206,10 +237,12 @@ function goOneStepBack() {
             $('.brainvita').removeClass('nude-brainvita');
             $('.square').removeClass('nude-square');
         }
+        backingUp = false;
     } else {}
 }
 
 function loadGame($modal) {
+    console.log("loadGame");
     console.log(myStorage);
     // $('.square').removeClass('ui-droppable-disabled');
     if (myStorage.getItem(32) == "training") {
@@ -220,9 +253,9 @@ function loadGame($modal) {
     $modal.css('display', 'none');
     setup = true;
     // console.log("loading...");
-    // console.log(myStorage.getItem(33 - myStorage.length)); 
-    let positions = myStorage.getItem(33 - myStorage.length).split(','); //33 bc the first item 32 is the mode info
-    console.log(positions);
+    // console.log(myStorage.getItem(34 - myStorage.length)); 
+    let positions = myStorage.getItem(34 - myStorage.length).split(','); //34 bc the first item 32 is the mode info and 33 is game view info
+    // console.log(positions);
     for (let position of positions) {
         const $square = $(`#${position}.square`);
         const $marble = $('<img>').attr('src', 'assets/marble.png').hide().addClass('marble').attr('id', `${position}`).appendTo($square);
@@ -324,11 +357,11 @@ function checkWin() {
         if (marblesOnBoard == 1 && ($('#33.square').attr('class').includes('ui-droppable-disabled'))) {
             winSound.play();
             myStorage.clear();
-            if (!trainingMode) {
-                createModal('Amazing! You win!');
-            } else if (trainingMode) {
-                createModal('Good job! Now try without Training Mode!');
-            }
+            // if (trainingMode) {
+            createModal('Amazing! You win!');
+            // } else {
+            // createModal('Good job! Now try without using the back button!');
+            // }
         } else {
             loseSound.play();
             myStorage.clear();
@@ -424,13 +457,16 @@ function resizeInnerDiv() {
 }
 
 function toggleTrainingMode() {
-    trainingMode = true;
-    myStorage.setItem('32', 'training');
+    trainingMode = !trainingMode;
+    if (trainingMode) {
+        myStorage.setItem('32', 'training');
+    } else {
+        myStorage.setItem('32', 'normal');
+    }
     clickSound.play();
     $('.back').toggleClass('back-active');
-    $('.back h1').toggleClass('back-active');
     toggleCount++;
-    $('.training-banner').addClass('banner-show');
+    $('.training-banner').toggleClass('banner-show');
 }
 
 $(() => {
@@ -439,7 +475,7 @@ $(() => {
     createGrid();
     window.onresize = resizeInnerDiv;
     setTimeout(() => {
-        if (myStorage.length <= 1 || myStorage.getItem(32) == 'training') {
+        if (myStorage.length <= 2) {
             createModal(rules)
         } else {
             createModal(continueOption, 'double');
