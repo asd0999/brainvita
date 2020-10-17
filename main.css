@@ -284,6 +284,11 @@ button:focus {
     color: #49372a;
 }
 
+.toggle-track,
+.toggle-track2 {
+    z-index: 2;
+}
+
 
 /*training mode*/
 
@@ -419,8 +424,10 @@ button:focus {
 @media (max-height: 620px) {
     .container {
         top: -84px;
+        /* top: -40px; */
     }
     .training-banner {
         top: 557px;
+        /* top: 97px; */
     }
 }
