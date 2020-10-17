@@ -256,7 +256,7 @@ button:focus {
     font-size: 16px;
     color: bisque;
     font-family: 'Monteserrat', sans-serif;
-    transform: translateX(120px);
+    transform: translateX(400px);
     /* transition-property: transform;
     transition-duration: 0.1s;
     transition-timing-function: ease-in; */
