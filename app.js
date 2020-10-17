@@ -8,7 +8,7 @@
 // https://stackoverflow.com/questions/260857/changing-website-favicon-dynamically
 
 let win = false;
-let rules = "Welcome to Brainvita!<p>The objective of this one-person game is to remove all but one marble fom the board and the last marble must end up in the centre<p>To remove a marble, you must move another marble over it and into an empty hollow. The marbles can not move diagonally or skip over multiple marbles<p>Use switches to make the game harder (by disabling rewind button) and to change the game view (not available on smaller screens)";
+let rules = "Welcome to Brainvita!<p>The objective of this one-person game is to remove all but one marble fom the board and the last marble must end up in the centre<p>To remove a marble, you must move another marble over it and into an empty hollow. The marbles can not move diagonally or skip over multiple marbles<p>Use switches to make the game harder (by disabling rewind button) and/or to change the game view (not available on smaller screens)";
 let continueOption = "You have an unfinished game. Would like to continue or start a new one?"
     // let marbleDrop = new Audio('assets/marble1.mp3');
 let marbleSound = new Audio('assets/marble2.mp3');
