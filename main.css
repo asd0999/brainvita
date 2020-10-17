@@ -416,11 +416,11 @@ button:focus {
     }
 }
 
-@media (max-height: 640px) {
+@media (max-height: 620px) {
     .container {
-        top: -66px;
+        top: -84px;
     }
     .training-banner {
-        top: 590px;
+        top: 557px;
     }
 }
