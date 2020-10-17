@@ -28,7 +28,7 @@ let nudeSkin = false;
 let backingUp = false;
 let emptyGrid = [];
 let screenSize = {};
-
+let bannerWidth = $(window).width();
 let myStorage = window.localStorage;
 
 // $('.title').on('click', () => {
@@ -454,6 +454,10 @@ function resizeInnerDiv() {
         'width': `${screenSize.availWidth * 0.8}`,
         'height': `${screenSize.availWidth * 0.8}`
     });
+    if (isMobileTablet() && screenSize.availWidth < 480) {
+        $('.training-banner').css('width', bannerWidth);
+    }
+
 }
 
 function toggleTrainingMode() {
