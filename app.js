@@ -55,7 +55,7 @@ const $reset = $('.play-again');
 $reset.on('click', playAgain);
 
 function playAgain() {
-    console.log("playAgain");
+    // console.log("playAgain");
     win = false;
     let temp1 = myStorage.getItem(32);
     let temp2 = myStorage.getItem(33);
@@ -75,7 +75,7 @@ function playAgain() {
 }
 
 function changeView() {
-    console.log("changeView");
+    // console.log("changeView");
     clickSound.play();
     nudeSkin = !nudeSkin;
     if (nudeSkin) {
@@ -100,10 +100,10 @@ function changeFavicon(i) {
 }
 
 function createGrid() {
-    console.log("createGrid");
+    // console.log("createGrid");
     $('.brainvita').empty();
     if (!setup) {
-        console.log("when setup false");
+        // console.log("when setup false");
         if (myStorage.getItem(32) != 'training') {
             myStorage.setItem('32', 'normal');
         } else {
@@ -112,8 +112,8 @@ function createGrid() {
         if (myStorage.getItem(33) != 'nude') {
             myStorage.setItem('33', 'red');
         }
-        console.log(myStorage.getItem(33));
-        console.log(myStorage.getItem(32));
+        // console.log(myStorage.getItem(33));
+        // console.log(myStorage.getItem(32));
     }
     for (let i = 0; i < 7; i++) {
         const $row = $('<div>').addClass('row').appendTo('.brainvita');
@@ -142,12 +142,12 @@ function createGrid() {
         }
     }
     if (myStorage.getItem(33) == 'nude' && myStorage.length >= 2 && !backingUp) {
-        console.log("trigger view change");
+        // console.log("trigger view change");
         $('.toggle-track2').trigger('click');
     }
 
     if (myStorage.getItem(32) == 'training' && myStorage.length >= 2 && !backingUp) {
-        console.log("trigger mode change");
+        // console.log("trigger mode change");
         $('.toggle-track').trigger('click');
     }
 
@@ -155,7 +155,7 @@ function createGrid() {
 }
 
 function createModal(t, buttons = "single") {
-    console.log("createModal");
+    // console.log("createModal");
     $('.modal-parent').empty();
     const $modal = $('<div>').addClass('modal').appendTo('.modal-parent');
     const $modalText = $('<div>').html(t).addClass('modal-text').appendTo($modal);
@@ -170,13 +170,13 @@ function createModal(t, buttons = "single") {
 }
 
 function setUpNewGame($modal) {
-    console.log("setUpNewGame");
+    // console.log("setUpNewGame");
     let temp1 = myStorage.getItem(32);
     let temp2 = myStorage.getItem(33);
     myStorage.clear();
     myStorage.setItem('32', `${temp1}`); //this value will be flipped, only here to avoid null
     myStorage.setItem('33', `${temp2}`); //something weird happening with the setTimeout
-    console.log(setup);
+    // console.log(setup);
     if (!setup) {
         setTimeout(createGrid, 400);
     }
@@ -189,10 +189,10 @@ function setUpNewGame($modal) {
 }
 
 function goOneStepBack() {
-    console.log("goOneStepBack");
+    // console.log("goOneStepBack");
     backingUp = true
     if (myStorage.length > 3 && !trainingMode && $('.back').attr('class').includes('back-active')) {
-        console.log("first conditional");
+        // console.log("first conditional");
         popSound.play();
         // if (toggleCount % 2 == 1) {
         //only create grid and not populate marbles
@@ -210,10 +210,10 @@ function goOneStepBack() {
 
         //populate marbles, same code as loadGame()
         //writing again to avaoid sending a modal dic and the sound
-        console.log("length: ", myStorage.length);
+        // console.log("length: ", myStorage.length);
         myStorage.removeItem(34 - myStorage.length);
         $('.marble').remove();
-        console.log(myStorage.getItem(34 - myStorage.length));
+        // console.log(myStorage.getItem(34 - myStorage.length));
         let positions = myStorage.getItem(34 - myStorage.length).split(',');
         // console.log(positions);
         for (let position of positions) {
@@ -225,7 +225,7 @@ function goOneStepBack() {
         backingUp = false;
 
     } else if (myStorage.length == 3 && !trainingMode && $('.back').attr('class').includes('back-active')) {
-        console.log("second conditional");
+        // console.log("second conditional");
         popSound.play();
         myStorage.removeItem(31);
         createGrid();
@@ -242,8 +242,8 @@ function goOneStepBack() {
 }
 
 function loadGame($modal) {
-    console.log("loadGame");
-    console.log(myStorage);
+    // console.log("loadGame");
+    // console.log(myStorage);
     // $('.square').removeClass('ui-droppable-disabled');
     if (myStorage.getItem(32) == "training") {
         trainingMode = true;
