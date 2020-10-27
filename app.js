@@ -8,7 +8,7 @@
 // https://stackoverflow.com/questions/260857/changing-website-favicon-dynamically
 
 let win = false;
-let rules = "Welcome to Brainvita!<p>The objective of this one-person game is to remove all but one marble fom the board and the last marble must end up in the centre<p>To remove a marble, you must move another marble over it and into an empty hollow. The marbles can not move diagonally or skip over multiple marbles<p>Use switches to make the game harder (by disabling rewind button) and/or to change the game view (not available on smaller screens)";
+let rules = "Welcome to Brainvita!<p>The objective of this one-person game is to remove all but one marble fom the board and the last marble must end up in the centre<p>To remove a marble, you must move another marble over it and into an empty hollow. The marbles can not move diagonally or skip over multiple marbles<p>Use the buttons on top left to rewind a move/change the game view (not available on smaller screens)";
 let continueOption = "You have an unfinished game. Would like to continue or start a new one?"
     // let marbleDrop = new Audio('assets/marble1.mp3');
 let marbleSound = new Audio('assets/marble2.mp3');
@@ -23,7 +23,7 @@ loseSound.volume = 0.5;
 winSound.volume = 1.0;
 let setup = false; //to play sound upon first interaction 
 let toggleCount = 0;
-let trainingMode = false;
+// let trainingMode = true;
 let nudeSkin = false;
 let backingUp = false;
 let emptyGrid = [];
@@ -39,8 +39,8 @@ const $back = $('.back');
 $back.on('click', goOneStepBack);
 
 //training mode toggle
-const $toggle = $('.toggle-track')
-$toggle.on('click', toggleTrainingMode);
+// const $toggle = $('.toggle-track')
+// $toggle.on('click', toggleTrainingMode);
 
 //view toggle
 const $viewToggle = $('.toggle-track2');
@@ -58,11 +58,11 @@ function playAgain() {
     // console.log("playAgain");
     win = false;
     let temp1 = myStorage.getItem(32);
-    let temp2 = myStorage.getItem(33);
+    // let temp2 = myStorage.getItem(33);
     myStorage.clear();
     setTimeout(() => {
         myStorage.setItem('32', `${temp1}`);
-        myStorage.setItem('33', `${temp2}`);
+        // myStorage.setItem('33', `${temp2}`);
     }, 400)
     createGrid();
     if (nudeSkin) {
@@ -82,12 +82,12 @@ function changeView() {
         changeFavicon('1');
         $('.brainvita').addClass('nude-brainvita');
         $('.square').addClass('nude-square');
-        myStorage.setItem('33', 'nude');
+        myStorage.setItem('32', 'nude');
     } else {
         changeFavicon('2');
         $('.brainvita').removeClass('nude-brainvita');
         $('.square').removeClass('nude-square');
-        myStorage.setItem('33', 'red');
+        myStorage.setItem('32', 'red');
     }
 }
 
@@ -104,13 +104,13 @@ function createGrid() {
     $('.brainvita').empty();
     if (!setup) {
         // console.log("when setup false");
-        if (myStorage.getItem(32) != 'training') {
-            myStorage.setItem('32', 'normal');
-        } else {
-            myStorage.setItem('32', 'training');
-        }
-        if (myStorage.getItem(33) != 'nude') {
-            myStorage.setItem('33', 'red');
+        // if (myStorage.getItem(32) != 'training') {
+        //     myStorage.setItem('32', 'normal');
+        // } else {
+        //     myStorage.setItem('32', 'training');
+        // }
+        if (myStorage.getItem(32) != 'nude') {
+            myStorage.setItem('32', 'red');
         }
         // console.log(myStorage.getItem(33));
         // console.log(myStorage.getItem(32));
@@ -141,15 +141,15 @@ function createGrid() {
             }
         }
     }
-    if (myStorage.getItem(33) == 'nude' && myStorage.length >= 2 && !backingUp) {
+    if (myStorage.getItem(32) == 'nude' && !backingUp) {
         // console.log("trigger view change");
         $('.toggle-track2').trigger('click');
     }
 
-    if (myStorage.getItem(32) == 'training' && myStorage.length >= 2 && !backingUp) {
-        // console.log("trigger mode change");
-        $('.toggle-track').trigger('click');
-    }
+    // if (myStorage.getItem(32) == 'training' && myStorage.length >= 2 && !backingUp) {
+    //     // console.log("trigger mode change");
+    //     $('.toggle-track').trigger('click');
+    // }
 
     createDragDrop();
 }
@@ -170,12 +170,12 @@ function createModal(t, buttons = "single") {
 }
 
 function setUpNewGame($modal) {
-    // console.log("setUpNewGame");
+    console.log("setUpNewGame");
     let temp1 = myStorage.getItem(32);
-    let temp2 = myStorage.getItem(33);
+    // let temp2 = myStorage.getItem(33);
     myStorage.clear();
     myStorage.setItem('32', `${temp1}`); //this value will be flipped, only here to avoid null
-    myStorage.setItem('33', `${temp2}`); //something weird happening with the setTimeout
+    // myStorage.setItem('33', `${temp2}`); //something weird happening with the setTimeout
     // console.log(setup);
     if (!setup) {
         setTimeout(createGrid, 400);
@@ -183,15 +183,15 @@ function setUpNewGame($modal) {
     $modal.css('display', 'none');
     setup = true;
 
-    if (trainingMode) {
-        $('.toggle-track').trigger('click')
-    }
+    // if (trainingMode) {
+    //     $('.toggle-track').trigger('click')
+    // }
 }
 
 function goOneStepBack() {
     // console.log("goOneStepBack");
     backingUp = true
-    if (myStorage.length > 3 && !trainingMode && $('.back').attr('class').includes('back-active')) {
+    if (myStorage.length > 2) {
         // console.log("first conditional");
         popSound.play();
         // if (toggleCount % 2 == 1) {
@@ -211,10 +211,10 @@ function goOneStepBack() {
         //populate marbles, same code as loadGame()
         //writing again to avaoid sending a modal dic and the sound
         // console.log("length: ", myStorage.length);
-        myStorage.removeItem(34 - myStorage.length);
+        myStorage.removeItem(33 - myStorage.length);
         $('.marble').remove();
-        // console.log(myStorage.getItem(34 - myStorage.length));
-        let positions = myStorage.getItem(34 - myStorage.length).split(',');
+        // console.log(myStorage.getItem(33 - myStorage.length));
+        let positions = myStorage.getItem(33 - myStorage.length).split(',');
         // console.log(positions);
         for (let position of positions) {
             const $square = $(`#${position}.square`);
@@ -224,7 +224,7 @@ function goOneStepBack() {
         // }
         backingUp = false;
 
-    } else if (myStorage.length == 3 && !trainingMode && $('.back').attr('class').includes('back-active')) {
+    } else if (myStorage.length == 2) {
         // console.log("second conditional");
         popSound.play();
         myStorage.removeItem(31);
@@ -254,7 +254,7 @@ function loadGame($modal) {
     setup = true;
     // console.log("loading...");
     // console.log(myStorage.getItem(34 - myStorage.length)); 
-    let positions = myStorage.getItem(34 - myStorage.length).split(','); //34 bc the first item 32 is the mode info and 33 is game view info
+    let positions = myStorage.getItem(33 - myStorage.length).split(','); //34 bc 32 is game view info
     // console.log(positions);
     for (let position of positions) {
         const $square = $(`#${position}.square`);
@@ -460,18 +460,18 @@ function resizeInnerDiv() {
 
 }
 
-function toggleTrainingMode() {
-    trainingMode = !trainingMode;
-    if (trainingMode) {
-        myStorage.setItem('32', 'training');
-    } else {
-        myStorage.setItem('32', 'normal');
-    }
-    clickSound.play();
-    $('.back').toggleClass('back-active');
-    toggleCount++;
-    $('.training-banner').toggleClass('banner-show');
-}
+// function toggleTrainingMode() {
+//     trainingMode = !trainingMode;
+//     if (trainingMode) {
+//         myStorage.setItem('32', 'training');
+//     } else {
+//         myStorage.setItem('32', 'normal');
+//     }
+//     clickSound.play();
+//     $('.back').toggleClass('back-active');
+//     toggleCount++;
+//     $('.training-banner').toggleClass('banner-show');
+// }
 
 $(() => {
     screenSize = window.screen;
